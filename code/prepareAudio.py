@@ -47,10 +47,10 @@ def noise_rand(x):
 def create_chroma(y):
   a = create_power_spec(y)
   threshold = np.percentile(a, 98.9) 
-  print('percentile 98.9 of power spec D2 (threshold): ', threshold)
+  #print('percentile 98.9 of power spec D2 (threshold): ', threshold)
   D2 = np.select([a <=threshold, a>threshold], [np.zeros_like(a), np.ones_like(a)])
   D2 = D2[40:120,:]
-  print('D2 shape: ', D2.shape)
+  #print('D2 shape: ', D2.shape)
   return D2
 
 def create_power_spec(y):
@@ -58,8 +58,8 @@ def create_power_spec(y):
   fhat[0:700]=0
   fhat[4000:]=0
   a = fhat.real[:24000]
-  print('fhat max:' , a.max())
-  print('fhat max index:' , a.argmax())
+  #print('fhat max:' , a.max())
+  #print('fhat max index:' , a.argmax())
   fhat[0:a.argmax() - 300] = 0  # when main freq is higher we can remove a higher range of lower frequncies
 
   yi = np.fft.ifft(fhat).astype(float)
