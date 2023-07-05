@@ -12,6 +12,11 @@ fr=48000
 top_db = 20
 mels=256
 
+def split(samples_same_category, num_test):
+    test = samples_same_category[:num_test]
+    train = samples_same_category[num_test:]
+    return train, test
+	
 def length_sr(y1):
   if( y1.shape[0] < fr):
     zeros = math.floor((fr - y1.shape[0])/2)
