@@ -22,8 +22,15 @@ def length_sr(y1):
 
 def roll_rand(x):
   prob =  np.random.sample(1)
-  shifts = math.floor(prob * 94)
-  return np.roll(x, shifts, axis=1)
+  shifts = math.floor(prob * fr)
+  return np.roll(x, shifts)
+
+def noise_rand(x):
+  prob =  np.random.sample(1)
+  fhat = np.fft.fft(x, fr)
+  fhat *= prob
+  yi = np.fft.ifft(fhat).astype(float)
+  return yi
 
 ''' 
     trim top_db=8
@@ -74,3 +81,27 @@ def make_sample(file):
   fig.colorbar(img, ax=[ax[1]])
 
   return Audio(data=y1, rate=sr)
+
+def make_sample_from_audio(y1):
+  y1 = librosa.effects.trim(y1, top_db=top_db)[0]
+  y1 = length_sr(y1)
+  
+  fig, ax = plt.subplots(nrows=2, sharex=True)
+  S2 = librosa.feature.melspectrogram(y=y1, sr=fr, n_mels=128)
+  D2 = librosa.power_to_db(S2, ref=np.max)
+  img = librosa.display.specshow(D2, x_axis='time', y_axis='mel', sr=sr, ax=ax[0])
+  fig.colorbar(img, ax=[ax[0]])
+  ax[0].label_outer()
+
+  c = create_chroma(y1)
+ 
+  img = librosa.display.specshow(c, x_axis='time', y_axis='mel', sr=sr, ax=ax[1])
+  fig.colorbar(img, ax=[ax[1]])
+
+  return Audio(data=y1, rate=sr)
+
+def make_sample_for_network(y1):
+  y1 = librosa.effects.trim(y1, top_db=top_db)[0]
+  y1 = length_sr(y1)
+  c = create_chroma(y1)
+  return c
